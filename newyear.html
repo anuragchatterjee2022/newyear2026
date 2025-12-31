@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy New Year 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;1,700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-shine: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --burgundy: #5a0a0a;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #000; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- Start Celebration Prompt --- */
+        #start-prompt {
+            position: fixed; inset: 0; background: #000; z-index: 3000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: var(--gold); text-align: center;
+        }
+
+        .btn-start {
+            padding: 18px 50px; font-size: 1.4rem; background: var(--gold-shine);
+            border: none; border-radius: 50px; cursor: pointer; font-weight: 900;
+            color: #4a0404; text-transform: uppercase; box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+            transition: 0.3s; font-family: 'Montserrat', sans-serif;
+        }
+        .btn-start:hover { transform: scale(1.1); box-shadow: 0 0 60px var(--gold); }
+
+        /* --- Year Transition --- */
+        #intro-overlay {
+            position: fixed; inset: 0; background: #000;
+            z-index: 2000; display: none; justify-content: center; align-items: center;
+        }
+
+        .year-text { position: absolute; font-family: 'Montserrat', sans-serif; font-size: 18vw; font-weight: 800; }
+        #y2025 { color: #222; animation: fadeOutRotate 3.5s forwards; }
+        #y2026 { background: var(--gold-shine); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; animation: fadeInScale 4.5s 2.8s forwards; }
+
+        @keyframes fadeOutRotate { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.3) rotate(-20deg); } }
+        @keyframes fadeInScale { 0% { opacity: 0; transform: scale(2); filter: blur(20px); } 50% { opacity: 1; transform: scale(1); filter: blur(0); } 100% { opacity: 0; transform: scale(0.8); filter: blur(10px); } }
+
+        /* --- Main Scene --- */
+        #main-scene { opacity: 0; transition: opacity 2s ease-in; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        
+        .universe { position: fixed; inset: 0; background: radial-gradient(circle at 50% 100%, #1b2735 0%, #000 100%); z-index: 0; }
+        .city-lights { position: absolute; bottom: 0; width: 100%; height: 22vh; background: linear-gradient(to top, #000 85%, transparent); clip-path: polygon(0% 100%, 0% 80%, 3% 70%, 7% 85%, 10% 60%, 15% 85%, 20% 40%, 30% 85%, 50% 30%, 70% 85%, 85% 45%, 100% 70%, 100% 100%); opacity: 0.95; z-index: 2; }
+        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+
+        /* --- Luxury Envelope (Fixed UI) --- */
+        .envelope-wrapper { position: relative; z-index: 10; cursor: pointer; perspective: 1200px; }
+        .envelope {
+            width: 350px; height: 230px; background: var(--burgundy);
+            border-radius: 4px; box-shadow: 0 40px 100px rgba(0,0,0,1);
+            border: 1px solid rgba(255, 215, 0, 0.2); position: relative;
+        }
+        .envelope::before { content: ''; position: absolute; inset: 12px; border: 1px solid rgba(252, 194, 1, 0.15); pointer-events: none; }
+
+        .flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 175px solid transparent; border-right: 175px solid transparent;
+            border-top: 140px solid #3a0606; transform-origin: top;
+            transition: transform 0.7s ease; z-index: 5;
+        }
+
+        .wax-seal {
+            position: absolute; top: 115px; left: 50%; transform: translate(-50%, -50%);
+            width: 80px; height: 80px; background: var(--gold-shine);
+            border-radius: 50%; z-index: 6; display: flex; justify-content: center;
+            align-items: center; color: #4a0404; font-weight: 900;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px solid #5a4622;
+        }
+
+        /* --- Centered Scroll --- */
+        .letter {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 92vw; max-width: 500px; height: 85vh; max-height: 680px;
+            background: #fffdf5; padding: 60px 35px; border-radius: 4px;
+            border: 5px double var(--gold); box-shadow: 0 0 200px rgba(0,0,0,1);
+            z-index: 100; opacity: 0; text-align: center;
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); overflow-y: auto;
+        }
+
+        .is-open .envelope-wrapper { opacity: 0; transform: translateY(100px) scale(0.6); pointer-events: none; }
+        .is-open .letter { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+
+        .letter h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; background: var(--gold-shine); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .letter p { font-family: 'Playfair Display', serif; font-size: 1.25rem; line-height: 1.8; color: #1a1a1a; margin: 25px 0; }
+        .signature { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: #b8860b; }
+        .close-btn { margin-top: 30px; padding: 15px 45px; background: var(--burgundy); color: white; border-radius: 50px; border: 1px solid var(--gold); cursor: pointer; text-transform: uppercase; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="start-prompt">
+        <button class="btn-start" onclick="beginExperience()">Start Celebration</button>
+    </div>
+
+    <audio id="bg-audio" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="intro-overlay">
+        <div class="year-text" id="y2025">2025</div>
+        <div class="year-text" id="y2026">2026</div>
+    </div>
+
+    <div id="main-scene">
+        <div class="universe"><div class="city-lights"></div></div>
+        <canvas id="fireworks"></canvas>
+        <div class="envelope-wrapper" onclick="openLetter()">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="wax-seal">2026</div>
+            </div>
+        </div>
+        <div class="letter">
+            <h1>Happy New Year</h1>
+            <p>Dearest Shona,</p>
+            <p>I was sitting here thinking about you today, and I felt overwhelmed by how lucky I am to have you by my side. But more than just being "my girlfriend,","my Shona", I was thinking about the incredible, ambitious, and talented woman you are.
+            I find myself constantly in awe of you. I admire the way you carry yourself, the kindness you show to everyone around you, and the incredible way you make my world feel so much brighter just by being in it. You have a heart like no one else I’ve ever met, and being loved by you is a gift I’ll never take for granted.
+            I want to see you reach every goal you’ve set and watch every one of your dreams come true, because you deserve the world and so much more.
+            I am your biggest supporter, your loudest cheerleader, and I will always be here to hold your hand through it all. You are my person, my heart, and my greatest inspiration.</p>
+            <p>Thank you for being part of my journey. Let's make this new chapter the most magical one yet!
+            I love you more than you’ll ever know my Shona.</p>
+            <div class="signature">With love 
+            yours Shona</div>
+            <button class="close-btn" onclick="closeLetter(event)">Return to Sky</button>
+        </div>
+    </div>
+
+    <script>
+        function beginExperience() {
+            document.getElementById('start-prompt').style.display = 'none';
+            document.getElementById('intro-overlay').style.display = 'flex';
+            document.getElementById('bg-audio').play();
+            
+            setTimeout(() => {
+                document.getElementById('intro-overlay').style.opacity = '0';
+                document.getElementById('main-scene').style.opacity = '1';
+                setTimeout(() => { document.getElementById('intro-overlay').style.display = 'none'; }, 1000);
+            }, 7000);
+        }
+
+        function openLetter() { document.body.classList.add('is-open'); }
+        function closeLetter(e) { e.stopPropagation(); document.body.classList.remove('is-open'); }
+
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color; this.alpha = 1;
+                const angle = Math.random() * Math.PI * 2, speed = Math.random() * 9 + 2;
+                this.vx = Math.cos(angle) * speed; this.vy = Math.sin(angle) * speed;
+            }
+            update() { this.vy += 0.15; this.vx *= 0.98; this.vy *= 0.98; this.x += this.vx; this.y += this.vy; this.alpha -= 0.012; }
+            draw() {
+                ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color; ctx.shadowBlur = 15; ctx.shadowColor = this.color;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 2.5, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (document.body.classList.contains('is-open') && Math.random() < 0.06) {
+                const x = Math.random()*canvas.width, y = Math.random()*canvas.height/2, hue = Math.random()*360;
+                for(let i=0; i<60; i++) particles.push(new Particle(x, y, `hsl(${hue}, 100%, 75%)`));
+            }
+            particles.forEach((p, i) => { if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); } });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize(); animate();
+    </script>
+</body>
+</html>
